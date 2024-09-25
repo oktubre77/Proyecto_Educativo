@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Comparación de Tarjetas</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+          }
+        .card {
+            display: inline-block;
+            width: 100px;
+            height: 50px;
+            margin: 10px;
+            background-color: #F0E68C; /* Color similar a las tarjetas */
+            border: 1px solid #20B2AA; /* Color similar al borde de las tarjetas */
+            padding: 10px;
+            cursor: pointer;
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #000;
+            z-index: 999;
+          }
+        /* Estilos adicionales según sea necesario */
+    </style>
+</head>
+<body>
+    <h1>¡Juego de Matemáticas!</h1>
+    <div id="cardContainer"></div>
+    <script>
+        const cardsData = [
+            "5+5+5+5", "20", "18", "10x2", "12", "9x2",
+            "4+4+4+4", "3x4", "6x3", "6+6+6", "15", "5x3",
+            "3x10", "4x5", "2x6", "30", "10+10+10", "8x2",
+            "16", "6+6", "3+3+3+3"
+        ];
+
+        let tarjetasSeleccionadas = [];
+
+        function inicializarTarjetas() {
+            const container = document.getElementById('cardContainer');
+            cardsData.forEach(data => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('card');
+                cardElement.setAttribute('data-value', data);
+                cardElement.textContent = data;
+                cardElement.addEventListener('click', function() {
+                    seleccionarTarjeta(cardElement);
+                });
+                container.appendChild(cardElement);
+            });
+        }
+
+        function seleccionarTarjeta(tarjeta) {
+            const contenidoTarjeta = evaluarContenidoTarjeta(tarjeta.getAttribute('data-value'));
+            mostrarPopup(`Valor seleccionado: ${contenidoTarjeta}`);
+            tarjetasSeleccionadas.push(contenidoTarjeta);
+
+            if (tarjetasSeleccionadas.length === 2) {
+                if (interpretarValorTarjeta(tarjetasSeleccionadas[0]) === interpretarValorTarjeta(tarjetasSeleccionadas[1])) {
+                    mostrarPopup('¡Felicidades, has acertado!');
+                } else {
+                    mostrarPopup('Vuelve a intentar');
+                }
+                tarjetasSeleccionadas = [];
+            }
+        }
+
+        function evaluarContenidoTarjeta(contenido) {
+            return contenido
+        }
+        function interpretarValorTarjeta(contenido) {
+            // Intenta evaluar el contenido matemático de la tarjeta.
+            // Por ejemplo, si el contenido es "10x2", esto debería interpretarse como 20.
+            try {
+                // Reemplaza cualquier 'x' por '*' para que pueda ser evaluado como una multiplicación.
+                const contenidoEvaluado = contenido.replace('x', '*');
+                // Evalúa la expresión matemática.
+                return eval(contenidoEvaluado);
+            } catch (error) {
+                console.error("Error al interpretar el valor de la tarjeta:", error);
+                return null; // Retorna null si hay un error al evaluar el contenido.
+            }
+        }
+
+        function mostrarPopup(mensaje) {
+            alert(mensaje);
+        }
+
+        document.addEventListener('DOMContentLoaded', inicializarTarjetas);
+    </script>
+</body>
+</html>
